@@ -53,8 +53,8 @@ public class Main {
             + "{Imagine if that bottle was broken, any unsuspecting person could have stept on that and cut themselves} You think to yourself. "
             + "Picking up the bottle, you dispose of it before going back to swimming.",
             "It was a pretty nice swin, the water was just the right tempature. "
-            + "Unfortunatlly, more people began to show up and the water got incredibly crowded. "
-            + "(Added more)"
+            + ""
+            + ""
         };
         int[] times = new int[lines.length];
         timer = new Timer();
