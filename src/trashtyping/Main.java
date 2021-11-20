@@ -17,7 +17,7 @@ public class Main {
         print(ControlCodes.ResetFormatting);
         println("Hello, and welcome to Trash Typing. In this game, you will type away trash and be given a final score based on how fast you were.\n Press Enter to Begin.");
         scan.nextLine();
-        println("Once you have completed a section, press Enter to check for mistakes. If there is a mistake, you will be penalized and force to retry.\n\n"
+        println("Once you have completed a section, press Enter to check for mistakes. If there is a mistake, you will be penalized 3 seconds for each mistake.\n\n"
                 + "Would you like to play [story] mode or [random] mode?");
         String input = scan.nextLine();
         println(ControlCodes.Clear);
@@ -106,7 +106,6 @@ public class Main {
         print(ControlCodes.ResetCursor + ControlCodes.ResetFormatting + ControlCodes.GREEN);
         String input = scan.nextLine();
         if (!line.equals(input)) {
-            //improper timing.
             int mistakeCount = showMistake(line, input);
             println("You made a mistake: +3s x " + mistakeCount);
             timer.addTime((mistakeCount * 3000) - 3000);
