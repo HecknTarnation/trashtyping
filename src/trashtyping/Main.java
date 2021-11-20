@@ -32,29 +32,31 @@ public class Main {
                 break;
             }
         }
-        print(ControlCodes.ResetFormatting);
+        print("\n" + ControlCodes.ResetFormatting);
         System.exit(0);
     }
 
     public static void normalMode() throws InterruptedException {
         String[] lines = {
-            "You decided today would be a good day to head to the beach. You packed your sunscreen and picnic basket, and got in your car. "
+            "You decided today would be a good day to head to the beach. You packed your sunscreen and picnic basket and got in your car. "
             + "The drive to the beach is about half an hour. "
-            + "When you arrive, you wave hello to the life guard (you two are very good friends) and find a nice spot on the beach to set your things down at. "
+            + "When you arrive, you wave hello to the lifeguard (you two are very good friends) and find a nice spot on the beach to set your things down at. "
             + "You take out your towel and lay it down on the sand. You came pretty early in the day, so you basically have the beach all to yourself. "
             + "You take out your sunscreen and apply it (you don't want to get burned after all!)",
             "After sunbathing for around 10 minutes, you decide to go for a little walk around the beach. "
             + "Heading to your left, you find yourself at the edge of the beach where a pile of rocks lay. "
-            + "You discover, laying on the rocks, a bunch of plastic bags and used paper plates and plastic utensels. "
+            + "You discover, laying on the rocks, a bunch of plastic bags and used paper plates and plastic utensils. "
             + "You shake your head before cleaning up the mess. You throw the trash into a trashcan, conveniently located in the parking lot. "
-            + "Heading back to your spot on the beach, you decide that you want to go for a swin. "
-            + "You make your way to the shore line and begin to walk into the water. "
-            + "Once you are knee deep, you feel your foot touch something round. It's a glass bottle, you could't even see it because it was buried beneth the sand. "
-            + "{Imagine if that bottle was broken, any unsuspecting person could have stept on that and cut themselves} You think to yourself. "
+            + "Heading back to your spot on the beach, you decide that you want to go for a swim. "
+            + "You make your way to the shoreline and begin to walk into the water. "
+            + "Once you are knee-deep, you feel your foot touch something round. It's a glass bottle. You couldn't even see it because it was buried beneath the sand. "
+            + "{Imagine if that bottle was broken, any unsuspecting person could have stepped on that and cut themselves} You think to yourself. "
             + "Picking up the bottle, you dispose of it before going back to swimming.",
-            "It was a pretty nice swin, the water was just the right tempature. "
-            + ""
-            + ""
+            "It was a pretty nice swim, the water was just the right temperature. "
+            + "You decide to head back to your spot on the beach. The beach has begun to get crowded. "
+            + "You stay at the beach for 20 more minutes before deciding to leave. "
+            + "You gather your things and begin to head to the parking lot. "
+            + "You arrive at your car and get in. You start your car and drive home."
         };
         int[] times = new int[lines.length];
         timer = new Timer();
@@ -103,22 +105,17 @@ public class Main {
         println(ControlCodes.Clear + ControlCodes.YELLOW + line);
         print(ControlCodes.ResetCursor + ControlCodes.ResetFormatting + ControlCodes.GREEN);
         String input = scan.nextLine();
-        try {
-            if (!line.equals(input)) {
-                //improper timing.
-                showMistake(line, input);
-                println("You made a mistake: +3s");
-                Thread.sleep(3000);
-                typeLine(line);
-            }
-        } catch (StackOverflowError e) {
-            println("You're pretty bad at this... +1000s");
-            timer.addTime(998000);
-            Thread.sleep(2000);
+        if (!line.equals(input)) {
+            //improper timing.
+            int mistakeCount = showMistake(line, input);
+            println("You made a mistake: +3s x " + mistakeCount);
+            timer.addTime((mistakeCount * 3000) - 3000);
+            Thread.sleep(3000);
         }
     }
 
-    public static void showMistake(String line, String input) {
+    public static int showMistake(String line, String input) {
+        int mistakes = 0;
         timer.togglePaused(true);
         //compare each letter, and mark the incorrect ones with red.
         StringBuilder sb = new StringBuilder();
@@ -129,6 +126,7 @@ public class Main {
             for (int i = 0; i < lineArray.length; i++) {
                 if (inputArray[i] != lineArray[i]) {
                     sb.append(ControlCodes.RED_BACKGROUND);
+                    mistakes++;
                 }
                 sb.append(inputArray[i]);
                 sb.append(ControlCodes.ResetFormatting);
@@ -139,6 +137,7 @@ public class Main {
             for (int i = 0; i < inputArray.length; i++) {
                 if (inputArray[i] != lineArray[i]) {
                     sb.append(ControlCodes.RED_BACKGROUND);
+                    mistakes++;
                 }
                 sb.append(inputArray[i]);
                 sb.append(ControlCodes.ResetFormatting);
@@ -146,6 +145,7 @@ public class Main {
             for (int i = inputArray.length; i < lineArray.length; i++) {
                 sb.append(ControlCodes.RED_BACKGROUND);
                 sb.append(lineArray[i]);
+                mistakes++;
                 sb.append(ControlCodes.ResetFormatting);
             }
         }
@@ -153,11 +153,13 @@ public class Main {
             sb.append(ControlCodes.RED_BACKGROUND);
             for (int i = index + 1; i < inputArray.length; i++) {
                 sb.append(inputArray[i]);
+                mistakes++;
             }
             sb.append(ControlCodes.ResetFormatting);
         }
         println(ControlCodes.ResetCursor + sb.toString());
         timer.togglePaused(false);
+        return mistakes;
     }
 
     public static String[] generateStory() {
